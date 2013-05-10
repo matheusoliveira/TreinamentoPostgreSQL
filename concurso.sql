@@ -276,8 +276,6 @@ RJ	Rio de Janeiro
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM "matheus.oliveira";
-GRANT ALL ON SCHEMA public TO "matheus.oliveira";
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
