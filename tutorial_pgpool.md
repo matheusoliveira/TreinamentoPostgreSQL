@@ -36,46 +36,49 @@ Failover automático
 
 Criar script failover.sh
 
-failed_node_id=$1
-failed_host_name=$2
-failed_port=$3
-failed_db_cluster=$4
-new_master_id=$5
-old_master_id=$6
-new_master_host_name=$7
-old_primary_node_id=$8
-
-if [ $failed_node_id = $old_primary_node_id ];then	# master failed
-    ssh postgres@$new_master_host_name "pg_ctl -D /dados/postgresql promote"
-fi
+	>>> failed_node_id=$1
+	    failed_host_name=$2
+	    failed_port=$3
+	    failed_db_cluster=$4
+	    new_master_id=$5
+	    old_master_id=$6
+	    new_master_host_name=$7
+	    old_primary_node_id=$8
+	    if [ $failed_node_id = $old_primary_node_id ];then	# master failed
+	        ssh postgres@$new_master_host_name "pg_ctl -D /dados/postgresql promote"
+	    fi
 
 Permitir conexão SSH sem senha do usuário root do master para o usuário postgres do slave:
-ssh-copy-id postgres@postgresql02
+
+	# ssh-copy-id postgres@postgresql02
 
 Editar o pgpool.conf:
-failover_command = '/usr/local/etc/failover.sh %d "%h" %p %D %m %M "%H" %P'
+
+	>>> failover_command = '/usr/local/etc/failover.sh %d "%h" %p %D %m %M "%H" %P'
 
 Watchdog
 ========
 
 Editar pgpool.conf (Master):
-use_watchdog = on
-trusted_servers = 'postgresql01,postgresql02'
-wd_hostname = 'postgresql01'
-delegate_IP = '192.168.148.100'
-heartbeat_destination0 = 'postgresql02'
-heartbeat_device0 = 'eth0'
-wd_lifecheck_user = 'postgres'
-other_pgpool_hostname0 = 'postgresql02'
-other_pgpool_port0 = 9999
+
+	>>> use_watchdog = on
+	    trusted_servers = 'postgresql01,postgresql02'
+	    wd_hostname = 'postgresql01'
+	    delegate_IP = '192.168.148.100'
+	    heartbeat_destination0 = 'postgresql02'
+	    heartbeat_device0 = 'eth0'
+	    wd_lifecheck_user = 'postgres'
+	    other_pgpool_hostname0 = 'postgresql02'
+	    other_pgpool_port0 = 9999
 
 Editar pgpool.conf (Standby):
-use_watchdog = on
-trusted_servers = 'postgresql01,postgresql02'
-wd_hostname = 'postgresql02'
-delegate_IP = '192.168.148.100'
-heartbeat_destination0 = 'postgresql01'
-heartbeat_device0 = 'eth0'
-wd_lifecheck_user = 'postgres'
-other_pgpool_hostname0 = 'postgresql01'
-other_pgpool_port0 = 9999
+
+	>>> use_watchdog = on
+	    trusted_servers = 'postgresql01,postgresql02'
+	    wd_hostname = 'postgresql02'
+	    delegate_IP = '192.168.148.100'
+	    heartbeat_destination0 = 'postgresql01'
+	    heartbeat_device0 = 'eth0'
+	    wd_lifecheck_user = 'postgres'
+	    other_pgpool_hostname0 = 'postgresql01'
+	    other_pgpool_port0 = 9999
