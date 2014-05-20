@@ -64,7 +64,7 @@ useradd --system --user-group --create-home --comment "PostgreSQL Admin User" --
 mkdir -p "$pgdata/"
 chown -R postgres:postgres "$pgdata/"
 su - postgres -c "/usr/local/pgsql/bin/initdb -D $pgdata"
-su - postgres -c "echo 'listen_addresses = \"*\"' > $pgdata/postgresql.conf"
+su - postgres -c "echo \"listen_addresses = '*'\" >> $pgdata/postgresql.conf"
 
 cp /usr/local/src/postgresql-$version/contrib/start-scripts/linux /etc/init.d/postgresql
 chmod a+x /etc/init.d/postgresql
