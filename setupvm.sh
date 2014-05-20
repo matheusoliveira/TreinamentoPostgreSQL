@@ -2,8 +2,9 @@
 
 version=9.3.4
 pgdata=/usr/local/pgsql/data
+uid="$( id -u )"
 
-if [ x"$USER" <> x"root" ]; then
+if [ x"$uid" != x"0" ]; then
 	echo "Voce deve rodar como root. Execute: sudo $0 $@"
 	exit 1
 fi
