@@ -47,5 +47,5 @@ crm configure primitive pgsql ocf:heartbeat:pgsr \
 crm configure colocation pgsql-with-dbip inf: DBIP pgsql
 
 # Preferência ao postgresql01
-crm configure location prefer-master pgsql 100: postgressql01
+crm configure location prefer-master pgsql 100: postgresql01
 
