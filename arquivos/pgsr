@@ -216,7 +216,7 @@ pgsql_promote() {
     if [ $rc -eq 0 ]; then
         pgsql_log info "PostgreSQL is already running as master. PID=`cat $PIDFILE`"
         return $OCF_SUCCESS
-    elif [ $rc -eq 1 ]; then
+    elif [ $rc -eq 2 ]; then
         pgsql_log err "PostgreSQL not running..."
         return $OCF_ERR_GENERIC
     fi
