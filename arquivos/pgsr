@@ -216,13 +216,18 @@ pgsql_promote() {
     if [ $rc -eq 0 ]; then
         pgsql_log info "PostgreSQL is already running as master. PID=`cat $PIDFILE`"
         return $OCF_SUCCESS
+    elif [ $rc -eq 1 ]; then
+        pgsql_log err "PostgreSQL not running..."
+        return $OCF_ERR_GENERIC
     fi
+    pgsql_log info "PostgreSQL is running as slave, promoting"
     output=`runasowner "$OCF_RESKEY_pgctl $OCF_RESKEY_ctl_opt -w -D $OCF_RESKEY_pgdata promote" 2>&1`
     rc=$?
     if [ $rc -ne 0 ]; then
         pgsql_log err "Error while promoting PostgreSQL: ${output}."
         return $OCF_ERR_GENERIC
     fi
+    sleep 2
     return $OCF_SUCCESS
 }
 
