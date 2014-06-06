@@ -191,10 +191,11 @@ pgsql_is_master() {
     if [ "x" = "x$OCF_RESKEY_pghost" ]
     then
        output=`runasowner "$OCF_RESKEY_psql -AXt -p $OCF_RESKEY_pgport -U $OCF_RESKEY_pgdba $OCF_RESKEY_pgdb -c 'SELECT pg_is_in_recovery();'" 2>&1`
+       rc=$?
     else
        output=`runasowner "$OCF_RESKEY_psql -AXt -h $OCF_RESKEY_pghost -p $OCF_RESKEY_pgport -U $OCF_RESKEY_pgdba $OCF_RESKEY_pgdb -c 'SELECT pg_is_in_recovery();'" 2>&1`
+       rc=$?
     fi
-    rc=$?
     if [ $rc -ne  0 ]; then
         return 2
     elif [ x"${output}" = x"t" ]; then
@@ -228,7 +229,7 @@ pgsql_promote() {
 #pgsql_start: Starts PostgreSQL
 pgsql_start() {
     local rc=
-    echo "`date`: starting postgresql" >> /tmp/start-res.log
+    pgsql_log info "starting PostgreSQL"
     if pgsql_status
     then
         pgsql_promote
@@ -261,7 +262,7 @@ pgsql_start() {
             pgsql_log info "PostgreSQL start command sent."
 	else
 	    pgsql_log err "Can't start PostgreSQL."
-            pgsql_log info "psql command output: $output"
+            pgsql_log info "pg_ctl command output: $output"
             return $OCF_ERR_GENERIC
 	fi
     else
@@ -296,7 +297,7 @@ pgsql_stop() {
     fi
 
     # Stop PostgreSQL do not wait for clients to disconnect
-    output=`runasowner "$OCF_RESKEY_pgctl -D $OCF_RESKEY_pgdata stop -m fast" 2>&1`
+    output=`runasowner "$OCF_RESKEY_pgctl -w -D $OCF_RESKEY_pgdata stop -m fast" 2>&1`
 
     # stop waiting
     count=0
