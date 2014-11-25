@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version=9.3.4
+version=9.3.5
 pgdata=/usr/local/pgsql/data
 uid="$( id -u )"
 
@@ -41,6 +41,12 @@ EOS
 
 echo "postgresql0$vmid" > /etc/hostname
 
+echo "Removendo instalacoes antigas do PostgreSQL"
+apt-get -y purge postgresql\*
+rm -rf /usr/local/pgsql*
+rm -f /etc/init.d/postgresql*
+deluser --remove-home postgres
+delgroup postgres
 echo "Instalando o PostgreSQL..."
 apt-get install -y libreadline6-dev zlib1g-dev build-essential
 cd /usr/local/src/
