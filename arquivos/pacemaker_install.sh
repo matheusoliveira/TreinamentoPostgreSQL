@@ -2,14 +2,14 @@
 
 # INICIO EDIÇÃO:
 
-# Interface de rede a associar ao VIP
-iface=eth0
 # Último octeto do VIP (p.e. se IP da máquina for 192.168.1.X e master_sub_ip=200 então master_vip=192.168.1.200)
 master_sub_ip=200
 
 # FIM EDIÇÃO
 
 
+# Interface de rede a associar ao VIP
+iface="$( ip -oneline addr show | grep '192\.168.56\.' | head -n1 | awk '{print $2}' )"
 basedir=$(dirname $0)
 # Recupera IP e máscara
 inet_addr=$(ip -oneline -family inet addr show ${iface} | head -n1 | awk '{print $4}')
