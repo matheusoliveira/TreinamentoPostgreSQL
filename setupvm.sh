@@ -48,7 +48,7 @@ rm -f /etc/init.d/postgresql*
 deluser --remove-home postgres
 delgroup postgres
 echo "Instalando o PostgreSQL..."
-apt-get install -y libreadline6-dev zlib1g-dev build-essential
+apt-get install -y libreadline6-dev zlib1g-dev build-essential openssh-server
 cd /usr/local/src/
 wget http://ftp.postgresql.org/pub/source/v$version/postgresql-$version.tar.bz2
 tar xvf postgresql-$version.tar.bz2
